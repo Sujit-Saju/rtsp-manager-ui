@@ -1,0 +1,11 @@
+{
+  "name": "RTSP Stream Gateway",
+  "description": "An intelligent high-performance surveillance and RTSP stream orchestration dashboard",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_API"
+  ]
+}
