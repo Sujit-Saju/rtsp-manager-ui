@@ -1,4 +1,4 @@
-# Eoxys RTSP Stream Gateway
+# RTSP Stream Gateway
 
 An intelligent high-performance surveillance and RTSP stream orchestration dashboard. Designed as a sleek, premium, high-telemetry interface for real-time video surveillance networks, active camera pipeline provisioning, and edge hardware monitoring.
 
