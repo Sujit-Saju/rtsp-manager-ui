@@ -19,13 +19,17 @@
     "@reduxjs/toolkit": "^2.12.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
+    "axios": "^1.18.0",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "formik": "^2.4.9",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "react-hot-toast": "^2.6.0",
     "react-redux": "^9.3.0",
+    "react-toastify": "^11.1.0",
     "vite": "^6.2.3"
   },
   "devDependencies": {
