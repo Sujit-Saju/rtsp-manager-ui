@@ -109,7 +109,7 @@ const AddStreamModal = ({ onClose }: AddStreamModalProps) => {
               filePath: values.filePath,
               fps: Number(values.fps),
               resolution: values.resolution,
-              sourceType: 'RTSP',
+              loopEnabled: true,
               status: true,
             })
           );
