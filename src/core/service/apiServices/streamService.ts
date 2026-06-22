@@ -24,5 +24,18 @@ export const streamService = () => {
     return GetAPI(urlConstants.stream + "/list" + pageParams, config);
   };
 
-  return { addStreams, getStreams, editStreams, deleteStreams, listStreams };
+  const uploadVideos = (data: any) => {
+    let configheader = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const formData = new FormData();
+
+    data.forEach((file: any) => formData.append("file", file));
+    formData.append("dirname", "upload/videos");
+    return PostAPI(urlConstants.stream + "/upload", formData, configheader);
+  };
+
+  return { addStreams, getStreams, editStreams, deleteStreams, listStreams, uploadVideos };
 };

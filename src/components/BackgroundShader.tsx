@@ -4,11 +4,16 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 export default function BackgroundShader() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    if (!isDark) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -134,7 +139,9 @@ export default function BackgroundShader() {
       gl.deleteShader(vertexShader);
       gl.deleteShader(fragmentShader);
     };
-  }, []);
+  }, [isDark]);
+
+  if (!isDark) return null;
 
   return (
     <canvas

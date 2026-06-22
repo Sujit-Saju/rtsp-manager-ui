@@ -97,3 +97,21 @@ export const listStreamAction = createAsyncThunk(
     }
   }
 );
+
+export const uploadVideosAction = createAsyncThunk(
+  "uploadVideos",
+  async (data1: any, { rejectWithValue }) => {
+    const { uploadVideos } = streamService();
+    try {
+      const { data } = await uploadVideos(data1);
+      console.log("Data From BE", data);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error?.response?.data ?? {
+          message: error?.message ?? "Something went wrong",
+        }
+      );
+    }
+  }
+);

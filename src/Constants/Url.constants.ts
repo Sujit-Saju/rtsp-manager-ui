@@ -1,3 +1,3 @@
 export const urlConstants = {
-   stream: `/streams`,
+   stream: `/stream`,
 }

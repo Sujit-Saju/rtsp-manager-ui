@@ -7,7 +7,7 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { addStreamAction, deleteStreamAction, editStreamAction, getStreamAction, listStreamAction } from "../action/StreamAction";
+import { addStreamAction, deleteStreamAction, editStreamAction, getStreamAction, listStreamAction, uploadVideosAction } from "../action/StreamAction";
 import { Streams } from "../InitialStates/Stream";
 
 
@@ -24,7 +24,7 @@ const streams = createSlice({
   initialState,
 
   reducers: {
-    
+
     resetStreamState: (state) => {
       state.isLoading = false;
       state.isSuccess = false;
@@ -160,6 +160,23 @@ const streams = createSlice({
           (action.payload as { message?: string })?.message ??
           "Failed to fetch Stream";
 
+        toast.error(state.message);
+      })
+      .addCase(uploadVideosAction.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadVideosAction.fulfilled, (state, action) => {
+        console.log("Fullfilled reducer", action.payload)
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.data = action.payload;
+        state.message = "Document uploaded succesfully";
+        state.status = true;
+      })
+      .addCase(uploadVideosAction.rejected, (state, action) => {
+        state.message = (action.payload as { message?: string })?.message ?? "Error Occured";
+        state.isLoading = false;
+        state.isSuccess = false;
         toast.error(state.message);
       });
   },
