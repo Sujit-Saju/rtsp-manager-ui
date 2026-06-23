@@ -1,14 +1,18 @@
 import ConsoleSidebar from '@/src/components/ConsoleSidebar';
 import { AppBar, Toolbar, Typography, Chip, Stack, IconButton, Avatar, Button, Paper, TextField, Card, CardMedia, CardContent, Container, Box, Badge, Dialog } from '@mui/material';
 import { Bell, CheckCircle, Copy, ExternalLink, Plus, Search, Trash2, Users, Video, Network } from 'lucide-react';
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import rtspLogo from '@/assets/logo/rtsp_logo.jpeg';
 import { useAppDispatch, useAppSelector } from '@/src/core/store/Hooks';
 import AddStreamModal from './AddStreamModal';
+import { listStreamAction } from '@/src/core/store/action/StreamAction';
 
 const MainPage = () => {
 
     const dispatch = useAppDispatch()
+
+    const API_BASE_URL =
+        import.meta.env.VITE_APP_API_URL;
 
     const streams = useAppSelector((store) => store.stream.data);
     const searchTerm = useAppSelector((store) => store.stream.data);
@@ -25,6 +29,11 @@ const MainPage = () => {
     const handleCloseAddStreamForm = () => {
         setAddStream(false);
     }
+
+    useEffect(() => {
+        // Fetch streams when the component mounts
+        dispatch(listStreamAction());
+    }, [dispatch]);
 
     // Statistics summaries
     const stats = useMemo(() => {
@@ -43,133 +52,134 @@ const MainPage = () => {
     }, [streams, previewStream]);
 
     return (
-        <><AppBar
-            position="fixed"
-            elevation={0}
-            sx={{
-                backgroundColor: 'rgba(17, 19, 31, 0.85)',
-                backdropFilter: 'blur(20px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                color: 'text.primary',
-                height: '76px',
-                zIndex: 1100
-            }}
-        >
-            <Container maxWidth="xl" sx={{ height: '100%' }}>
-                <Toolbar sx={{ height: '100%', justifyContent: 'space-between', px: { xs: 0, sm: 2 } }}>
-                    {/* Left side: Logo & Brand details */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                            <Box
-                                sx={{
-                                    width: 44,
-                                    height: 44,
-                                    borderRadius: '50%',
-                                    overflow: 'hidden',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    border: '1.5px solid rgba(99, 102, 241, 0.35)',
-                                    boxShadow: '0 0 12px rgba(99, 102, 241, 0.2)'
-                                }}
-                            >
+        <>
+            <AppBar
+                position="fixed"
+                elevation={0}
+                sx={{
+                    backgroundColor: 'rgba(17, 19, 31, 0.85)',
+                    backdropFilter: 'blur(20px)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    color: 'text.primary',
+                    height: '76px',
+                    zIndex: 1100
+                }}
+            >
+                <Container maxWidth="xl" sx={{ height: '100%' }}>
+                    <Toolbar sx={{ height: '100%', justifyContent: 'space-between', px: { xs: 0, sm: 2 } }}>
+                        {/* Left side: Logo & Brand details */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                 <Box
-                                    component="img"
-                                    src={rtspLogo}
-                                    alt="RTSP Manager Logo"
                                     sx={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover'
+                                        width: 44,
+                                        height: 44,
+                                        borderRadius: '50%',
+                                        overflow: 'hidden',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        border: '1.5px solid rgba(99, 102, 241, 0.35)',
+                                        boxShadow: '0 0 12px rgba(99, 102, 241, 0.2)'
+                                    }}
+                                >
+                                    <Box
+                                        component="img"
+                                        src={rtspLogo}
+                                        alt="RTSP Manager Logo"
+                                        sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover'
+                                        }} />
+                                </Box>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 900,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '-1px',
+                                        fontFamily: '"Space Grotesk", sans-serif',
+                                        background: 'linear-gradient(45deg, #818cf8, #22d3ee)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent'
+                                    }}
+                                >
+                                    RTSP Manager
+                                </Typography>
+                                <Chip
+                                    label="PRO-v1"
+                                    size="small"
+                                    color="primary"
+                                    sx={{
+                                        height: '18px',
+                                        fontSize: '9px',
+                                        fontWeight: 950,
+                                        borderRadius: '6px',
+                                        px: 0.5,
+                                        fontFamily: 'monospace'
                                     }} />
                             </Box>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    fontWeight: 900,
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '-1px',
-                                    fontFamily: '"Space Grotesk", sans-serif',
-                                    background: 'linear-gradient(45deg, #818cf8, #22d3ee)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent'
-                                }}
-                            >
-                                RTSP Manager
-                            </Typography>
-                            <Chip
-                                label="PRO-v1"
-                                size="small"
-                                color="primary"
-                                sx={{
-                                    height: '18px',
-                                    fontSize: '9px',
-                                    fontWeight: 950,
-                                    borderRadius: '6px',
-                                    px: 0.5,
-                                    fontFamily: 'monospace'
-                                }} />
-                        </Box>
-                    </Box>
-
-                    {/* Right side diagnostics and operator avatar */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3.5 }}>
-                        <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 1.5 }}>
-                            <Chip
-                                label="RTSP INGEST ENABLED"
-                                size="small"
-                                sx={{
-                                    height: '22px',
-                                    fontSize: '9px',
-                                    fontWeight: 800,
-                                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                                    color: '#818cf8',
-                                    border: '1px solid rgba(99, 102, 241, 0.15)',
-                                    fontFamily: 'monospace'
-                                }} />
-                            <Chip
-                                label="LAN CLUSTER REPLICANT"
-                                size="small"
-                                sx={{
-                                    height: '22px',
-                                    fontSize: '9px',
-                                    fontWeight: 800,
-                                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
-                                    color: '#22d3ee',
-                                    border: '1px solid rgba(34, 211, 238, 0.15)',
-                                    fontFamily: 'monospace'
-                                }} />
                         </Box>
 
-                        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-                            <IconButton
-                                size="small"
-                                onClick={() => {
-                                    // dispatch(setToastMessage('System diagnostics: All core pipelines normal'));
-                                    // dispatch(addLog({ level: 'info', message: 'Triggered background pipeline integrity checkout' }));
-                                }}
-                                sx={{ color: '#94a3b8', '&:hover': { color: '#818cf8', backgroundColor: 'rgba(255, 255, 255, 0.04)' } }}
-                                title="System Alerts"
-                            >
-                                <Badge color="error" variant="dot">
-                                    <Bell size={18} />
-                                </Badge>
-                            </IconButton>
+                        {/* Right side diagnostics and operator avatar */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3.5 }}>
+                            <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 1.5 }}>
+                                <Chip
+                                    label="RTSP INGEST ENABLED"
+                                    size="small"
+                                    sx={{
+                                        height: '22px',
+                                        fontSize: '9px',
+                                        fontWeight: 800,
+                                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                        color: '#818cf8',
+                                        border: '1px solid rgba(99, 102, 241, 0.15)',
+                                        fontFamily: 'monospace'
+                                    }} />
+                                <Chip
+                                    label="LAN CLUSTER REPLICANT"
+                                    size="small"
+                                    sx={{
+                                        height: '22px',
+                                        fontSize: '9px',
+                                        fontWeight: 800,
+                                        backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                                        color: '#22d3ee',
+                                        border: '1px solid rgba(34, 211, 238, 0.15)',
+                                        fontFamily: 'monospace'
+                                    }} />
+                            </Box>
 
-                            <Avatar
-                                alt="Tactical Operator"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOz7SNC1_9cLVJ6hXUXZOeO7sT7N9Bnjjh0XTp9tiX7paw5JSx6pjTD3OA1yQq1RTbgsq1D1d_4PvHr12p9lqv2-6X5Y0rTPedzpGaMCIKPbhiDGKliOqa2WtzeSmI5_jjHNU5px_dbDQE6SAyy-ZXu0ZlhIIxZJIdLqzUlNcIGbsK5r98PjX14GoiIi6h_7pu7jApMRXU6mKbMTJ9XU2qkk6PlvHyPcwP9k-bnRQ41AC2YcbhE_lCxW7GxV9rMF0CKcpnr424GeUZ"
-                                sx={{
-                                    width: 36,
-                                    height: 36,
-                                    border: '2px solid rgba(99, 102, 241, 0.3)',
-                                    boxShadow: '0 2px 10px rgba(99, 102, 241, 0.2)'
-                                }} />
-                        </Stack>
-                    </Box>
-                </Toolbar>
-            </Container>
-        </AppBar>
+                            <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+                                <IconButton
+                                    size="small"
+                                    onClick={() => {
+                                        // dispatch(setToastMessage('System diagnostics: All core pipelines normal'));
+                                        // dispatch(addLog({ level: 'info', message: 'Triggered background pipeline integrity checkout' }));
+                                    }}
+                                    sx={{ color: '#94a3b8', '&:hover': { color: '#818cf8', backgroundColor: 'rgba(255, 255, 255, 0.04)' } }}
+                                    title="System Alerts"
+                                >
+                                    <Badge color="error" variant="dot">
+                                        <Bell size={18} />
+                                    </Badge>
+                                </IconButton>
+
+                                <Avatar
+                                    alt="Tactical Operator"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOz7SNC1_9cLVJ6hXUXZOeO7sT7N9Bnjjh0XTp9tiX7paw5JSx6pjTD3OA1yQq1RTbgsq1D1d_4PvHr12p9lqv2-6X5Y0rTPedzpGaMCIKPbhiDGKliOqa2WtzeSmI5_jjHNU5px_dbDQE6SAyy-ZXu0ZlhIIxZJIdLqzUlNcIGbsK5r98PjX14GoiIi6h_7pu7jApMRXU6mKbMTJ9XU2qkk6PlvHyPcwP9k-bnRQ41AC2YcbhE_lCxW7GxV9rMF0CKcpnr424GeUZ"
+                                    sx={{
+                                        width: 36,
+                                        height: 36,
+                                        border: '2px solid rgba(99, 102, 241, 0.3)',
+                                        boxShadow: '0 2px 10px rgba(99, 102, 241, 0.2)'
+                                    }} />
+                            </Stack>
+                        </Box>
+                    </Toolbar>
+                </Container>
+            </AppBar>
             <Toolbar sx={{ height: '76px' }} />
             <Container maxWidth="xl" sx={{ pt: 4, pb: 14, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
@@ -352,7 +362,7 @@ const MainPage = () => {
                             </Paper>
 
                             {/* Grid list of RTSP card feeds */}
-                            {/* {filteredStreams.length === 0 ? (
+                            {streams.length === 0 ? (
                                 <Paper
                                     elevation={0}
                                     sx={{ p: 10, textAlign: 'center', borderRadius: '24px', border: '1px dashed rgba(255, 255, 255, 0.12)', color: '#94a3b8', fontStyle: 'italic', backgroundColor: 'transparent' }}
@@ -361,74 +371,51 @@ const MainPage = () => {
                                 </Paper>
                             ) : (
                                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
-                                    {filteredStreams.map((stream: any) => (
-                                        <Box key={stream.id}>
-                                            <Card
-                                                elevation={0}
-                                                sx={{
-                                                    borderRadius: '24px',
-                                                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                                                    backgroundColor: '#11131f',
-                                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    height: '100%',
-                                                    overflow: 'hidden',
-                                                    transition: 'all 0.3s ease',
-                                                    '&:hover': {
-                                                        transform: 'translateY(-4px)',
-                                                        borderColor: 'primary.light',
-                                                        boxShadow: '0 12px 30px rgba(99, 102, 241, 0.15)'
-                                                    }
-                                                }}
-                                            >
-                                                <Box sx={{ position: 'relative', height: '176px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
-                                                    {stream.imageUrl ? (
-                                                        <CardMedia
-                                                            component="img"
-                                                            image={stream.imageUrl}
-                                                            alt={stream.name}
-                                                            sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                    ) : (
-                                                        <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace', fontSize: '10px', color: '#818cf8' }}>
-                                                            NO HARDWARE SIGNAL
-                                                        </Box>
-                                                    )}
+                                    {Array.isArray(streams) &&
+                                        streams.map((stream) => (
+                                            <Box key={stream.uniqCode}>
+                                                <Card
+                                                    elevation={0}
+                                                    sx={{
+                                                        borderRadius: '24px',
+                                                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                                                        backgroundColor: '#11131f',
+                                                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        height: '100%',
+                                                        overflow: 'hidden',
+                                                        transition: 'all 0.3s ease',
+                                                        '&:hover': {
+                                                            transform: 'translateY(-4px)',
+                                                            borderColor: 'primary.light',
+                                                            boxShadow: '0 12px 30px rgba(99, 102, 241, 0.15)'
+                                                        }
+                                                    }}
+                                                >
+                                                    <Box sx={{ position: 'relative', height: '176px', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+                                                        {stream.snapshotPath ? (
+                                                            console.log("IMAGE URL =>", `${API_BASE_URL}/${stream.snapshotPath}`),
+                                                            <CardMedia
+                                                                component="img"
+                                                                image={`${API_BASE_URL}/${stream.snapshotPath}`}
+                                                                alt={stream.streamName}
+                                                                sx={{
+                                                                    width: "100%",
+                                                                    height: "100%",
+                                                                    objectFit: "cover",
+                                                                }} />
+                                                        ) : (
+                                                            <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace', fontSize: '10px', color: '#818cf8' }}>
+                                                                {stream.streamName}
+                                                            </Box>
+                                                        )}
 
-                                                    <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #11131f 0%, rgba(17, 19, 31, 0) 80%)' }} />
+                                                        <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #11131f 0%, rgba(17, 19, 31, 0) 80%)' }} />
 
-                                                    <Box sx={{ position: 'absolute', top: 16, left: 16, display: 'flex', flexWrap: 'wrap', gap: 1, maxW: 'calc(100% - 32px)' }}>
-                                                        <Chip
-                                                            label={stream.isReady ? 'PORT ALIVE' : 'PORT SUSPENDED'}
-                                                            size="small"
-                                                            sx={{
-                                                                height: '20px',
-                                                                fontSize: '8.5px',
-                                                                fontWeight: 900,
-                                                                fontFamily: 'monospace',
-                                                                borderRadius: '6px',
-                                                                backgroundColor: stream.isReady ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)',
-                                                                color: '#ffffff'
-                                                            }} />
-                                                        <Chip
-                                                            label={stream.networkType}
-                                                            size="small"
-                                                            sx={{
-                                                                height: '20px',
-                                                                fontSize: '8.5px',
-                                                                fontWeight: 800,
-                                                                fontFamily: 'monospace',
-                                                                borderRadius: '6px',
-                                                                backgroundColor: '#161825',
-                                                                color: '#94a3b8',
-                                                                border: '1px solid rgba(255, 255, 255, 0.08)'
-                                                            }} />
-                                                    </Box>
-
-                                                    {stream.loop && (
-                                                        <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+                                                        <Box sx={{ position: 'absolute', top: 16, left: 16, display: 'flex', flexWrap: 'wrap', gap: 1, maxW: 'calc(100% - 32px)' }}>
                                                             <Chip
-                                                                label="AUTOLOOP"
+                                                                label={stream.status ? 'PORT ALIVE' : 'PORT SUSPENDED'}
                                                                 size="small"
                                                                 sx={{
                                                                     height: '20px',
@@ -436,102 +423,117 @@ const MainPage = () => {
                                                                     fontWeight: 900,
                                                                     fontFamily: 'monospace',
                                                                     borderRadius: '6px',
-                                                                    backgroundColor: 'rgba(34, 211, 238, 0.2)',
-                                                                    color: '#22d3ee',
-                                                                    border: '1px solid rgba(34, 211, 238, 0.3)'
+                                                                    backgroundColor: stream.status ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)',
+                                                                    color: '#ffffff'
                                                                 }} />
                                                         </Box>
-                                                    )}
-                                                </Box>
 
-                                                <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2.5 }}>
-                                                    <Box>
-                                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
-                                                            <Box sx={{ minWidth: 0 }}>
-                                                                <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#f4f4f7', tracking: '-0.01em', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', fontFamily: '"Space Grotesk", sans-serif' }}>
-                                                                    {stream.name}
-                                                                </Typography>
-                                                                <Typography variant="caption" sx={{ fontFamily: 'monospace', color: '#94a3b8', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', mt: 0.5 }}>
-                                                                    {stream.sourceUrl}
-                                                                </Typography>
+                                                        {/* {stream.loop && (
+                                                            <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+                                                                <Chip
+                                                                    label="AUTOLOOP"
+                                                                    size="small"
+                                                                    sx={{
+                                                                        height: '20px',
+                                                                        fontSize: '8.5px',
+                                                                        fontWeight: 900,
+                                                                        fontFamily: 'monospace',
+                                                                        borderRadius: '6px',
+                                                                        backgroundColor: 'rgba(34, 211, 238, 0.2)',
+                                                                        color: '#22d3ee',
+                                                                        border: '1px solid rgba(34, 211, 238, 0.3)'
+                                                                    }} />
+                                                            </Box>
+                                                        )} */}
+                                                    </Box>
+
+                                                    <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2.5 }}>
+                                                        <Box>
+                                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
+                                                                <Box sx={{ minWidth: 0 }}>
+                                                                    <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#f4f4f7', tracking: '-0.01em', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', fontFamily: '"Space Grotesk", sans-serif' }}>
+                                                                        {`${API_BASE_URL}/${stream.snapshotPath}`}
+                                                                    </Typography>
+                                                                    {/* <Typography variant="caption" sx={{ fontFamily: 'monospace', color: '#94a3b8', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', mt: 0.5 }}>
+                                                                        {stream.sourceUrl}
+                                                                    </Typography> */}
+                                                                </Box>
+
+                                                                <IconButton
+                                                                    size="small"
+                                                                    // onClick={() => handleCopyUrl(stream.sourceUrl, stream.name)}
+                                                                    sx={{ border: '1px solid rgba(255,255,255,0.08)', color: 'secondary.light', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.04)' } }}
+                                                                    title="Copy Source Address"
+                                                                >
+                                                                    <Copy size={12} />
+                                                                </IconButton>
                                                             </Box>
 
-                                                            <IconButton
-                                                                size="small"
-                                                                // onClick={() => handleCopyUrl(stream.sourceUrl, stream.name)}
-                                                                sx={{ border: '1px solid rgba(255,255,255,0.08)', color: 'secondary.light', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.04)' } }}
-                                                                title="Copy Source Address"
+                                                            <Stack direction="row" spacing={0.8} sx={{ flexWrap: 'wrap', gap: 0.8, pt: 1.5 }}>
+                                                                <Chip label={`📐 ${stream.resolution}`} size="small" sx={{ fontFamily: 'monospace', fontSize: '9px', fontWeight: 700, px: 0.2, height: '22px', backgroundColor: 'rgba(255, 255, 255, 0.04)', color: '#a5b4fc', border: '1px solid rgba(255, 255, 255, 0.04)' }} />
+                                                                <Chip label={`💨 ${stream.fps} FPS`} size="small" sx={{ fontFamily: 'monospace', fontSize: '9px', fontWeight: 700, px: 0.2, height: '22px', backgroundColor: 'rgba(255, 255, 255, 0.04)', color: '#34d399', border: '1px solid rgba(255, 255, 255, 0.04)' }} />
+                                                            </Stack>
+
+                                                            <Box sx={{ p: 2, mt: 2.5, backgroundColor: 'rgba(0, 0, 0, 0.15)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                                                                    <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '8.5px', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em' }}>
+                                                                        RTSP ENCRYPTED OUTPUT RELAY
+                                                                    </Typography>
+                                                                    <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '8px', fontWeight: 900, color: 'secondary.light' }}>
+                                                                        PORT : 8554
+                                                                    </Typography>
+                                                                </Box>
+                                                                {/* <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 700, color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', userSelect: 'all' }}>
+                                                                    {stream.liveEndpoint}
+                                                                </Typography> */}
+                                                            </Box>
+                                                        </Box>
+
+                                                        <Box sx={{ display: 'flex', gap: 1.5, borderTop: '1px solid rgba(255, 255, 255, 0.06)', pt: 2 }}>
+                                                            <Button
+                                                                variant="contained"
+                                                                onClick={() => {
+                                                                    // dispatch(setPreviewStream(stream));
+                                                                    // dispatch(addLog({ level: 'info', message: `Launch live visual decoder on camera stream: '${stream.name}'` }));
+                                                                }}
+                                                                fullWidth
+                                                                startIcon={<ExternalLink size={12} />}
+                                                                sx={{
+                                                                    py: 1,
+                                                                    fontSize: '11px',
+                                                                    backgroundColor: 'primary.main',
+                                                                    '&:hover': { backgroundColor: 'primary.dark' }
+                                                                }}
                                                             >
-                                                                <Copy size={12} />
-                                                            </IconButton>
+                                                                Live Telemetry
+                                                            </Button>
+
+                                                            <Button
+                                                                variant="outlined"
+                                                                color="error"
+                                                                // onClick={() => handleDeleteStream(stream.id, stream.name)}
+                                                                sx={{
+                                                                    minWidth: '40px',
+                                                                    width: '40px',
+                                                                    borderRadius: '12px',
+                                                                    borderColor: 'rgba(239, 68, 68, 0.25)',
+                                                                    color: 'error.main',
+                                                                    p: 0,
+                                                                    '&:hover': {
+                                                                        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                                                                        borderColor: 'error.main'
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Trash2 size={13} />
+                                                            </Button>
                                                         </Box>
-
-                                                        <Stack direction="row" spacing={0.8} sx={{ flexWrap: 'wrap', gap: 0.8, pt: 1.5 }}>
-                                                            <Chip label={`📐 ${stream.resolution}`} size="small" sx={{ fontFamily: 'monospace', fontSize: '9px', fontWeight: 700, px: 0.2, height: '22px', backgroundColor: 'rgba(255, 255, 255, 0.04)', color: '#a5b4fc', border: '1px solid rgba(255, 255, 255, 0.04)' }} />
-                                                            <Chip label={`💿 ${stream.codec}`} size="small" sx={{ fontFamily: 'monospace', fontSize: '9px', fontWeight: 700, px: 0.2, height: '22px', backgroundColor: 'rgba(255, 255, 255, 0.04)', color: '#22d3ee', border: '1px solid rgba(255, 255, 255, 0.04)' }} />
-                                                            <Chip label={`💨 ${stream.fps} FPS`} size="small" sx={{ fontFamily: 'monospace', fontSize: '9px', fontWeight: 700, px: 0.2, height: '22px', backgroundColor: 'rgba(255, 255, 255, 0.04)', color: '#34d399', border: '1px solid rgba(255, 255, 255, 0.04)' }} />
-                                                        </Stack>
-
-                                                        <Box sx={{ p: 2, mt: 2.5, backgroundColor: 'rgba(0, 0, 0, 0.15)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-                                                                <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '8.5px', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em' }}>
-                                                                    RTSP ENCRYPTED OUTPUT RELAY
-                                                                </Typography>
-                                                                <Typography variant="caption" sx={{ fontFamily: 'monospace', fontSize: '8px', fontWeight: 900, color: 'secondary.light' }}>
-                                                                    PORT : 8554
-                                                                </Typography>
-                                                            </Box>
-                                                            <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '11px', fontWeight: 700, color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', userSelect: 'all' }}>
-                                                                {stream.liveEndpoint}
-                                                            </Typography>
-                                                        </Box>
-                                                    </Box>
-
-                                                    <Box sx={{ display: 'flex', gap: 1.5, borderTop: '1px solid rgba(255, 255, 255, 0.06)', pt: 2 }}>
-                                                        <Button
-                                                            variant="contained"
-                                                            onClick={() => {
-                                                                // dispatch(setPreviewStream(stream));
-                                                                // dispatch(addLog({ level: 'info', message: `Launch live visual decoder on camera stream: '${stream.name}'` }));
-                                                            }}
-                                                            fullWidth
-                                                            startIcon={<ExternalLink size={12} />}
-                                                            sx={{
-                                                                py: 1,
-                                                                fontSize: '11px',
-                                                                backgroundColor: 'primary.main',
-                                                                '&:hover': { backgroundColor: 'primary.dark' }
-                                                            }}
-                                                        >
-                                                            Live Telemetry
-                                                        </Button>
-
-                                                        <Button
-                                                            variant="outlined"
-                                                            color="error"
-                                                            // onClick={() => handleDeleteStream(stream.id, stream.name)}
-                                                            sx={{
-                                                                minWidth: '40px',
-                                                                width: '40px',
-                                                                borderRadius: '12px',
-                                                                borderColor: 'rgba(239, 68, 68, 0.25)',
-                                                                color: 'error.main',
-                                                                p: 0,
-                                                                '&:hover': {
-                                                                    backgroundColor: 'rgba(239, 68, 68, 0.05)',
-                                                                    borderColor: 'error.main'
-                                                                }
-                                                            }}
-                                                        >
-                                                            <Trash2 size={13} />
-                                                        </Button>
-                                                    </Box>
-                                                </CardContent>
-                                            </Card>
-                                        </Box>
-                                    ))}
+                                                    </CardContent>
+                                                </Card>
+                                            </Box>
+                                        ))}
                                 </Box>
-                            )} */}
+                            )}
                         </Box>
                         {addStream && (
                             <Dialog open={addStream} onClose={handleCloseAddStreamForm}>

@@ -93,7 +93,7 @@ const streams = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
 
-        state.data = action.payload["data"]["data"];
+        state.data = action.payload["data"];
 
         state.message = "Stream Added successfully";
         state.status = true;

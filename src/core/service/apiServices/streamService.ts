@@ -20,8 +20,8 @@ export const streamService = () => {
   const deleteStreams = (id: any) => {
     return DeleteAPI(urlConstants.stream + `/delete?uniq_code=${id}`, config);
   };
-  const listStreams = (pageParams: string) => {
-    return GetAPI(urlConstants.stream + "/list" + pageParams, config);
+  const listStreams = () => {
+    return GetAPI(urlConstants.stream + "/list"  ,config);
   };
 
   const uploadVideos = (data: any) => {

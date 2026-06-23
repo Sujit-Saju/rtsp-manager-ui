@@ -34,6 +34,7 @@ const AddStreamModal = ({ onClose }: AddStreamModalProps) => {
     filePath: '', // This will hold the BE string path after upload
     fps: 30,
     resolution: '1920x1080',
+    snapshotPath: "",
   };
 
   const validationSchema = Yup.object({
@@ -107,6 +108,7 @@ const AddStreamModal = ({ onClose }: AddStreamModalProps) => {
             addStreamAction({
               streamName: values.streamName,
               filePath: values.filePath,
+              snapshotPath: values.snapshotPath,
               fps: Number(values.fps),
               resolution: values.resolution,
               loopEnabled: true,
@@ -178,9 +180,11 @@ const AddStreamModal = ({ onClose }: AddStreamModalProps) => {
                     setFieldTouched("filePath", true);
 
                     try {
-                      const backendPath = await uploadVideoToBackend(file);
+                      const uploadedData = await uploadVideoToBackend(file);
 
-                      setFieldValue("filePath", backendPath);
+                      setFieldValue("filePath", uploadedData.video_path);
+                      setFieldValue("snapshotPath", uploadedData.snapshot_path);
+
                       setUploadedFileName(file.name);
                     } catch (error) {
                       console.error(error);
@@ -247,7 +251,7 @@ const AddStreamModal = ({ onClose }: AddStreamModalProps) => {
                           color="text.secondary"
                           sx={{ wordBreak: "break-all" }}
                         >
-                          {values.filePath}
+                          Video: {values.filePath}
                         </Typography>
                       </Box>
 

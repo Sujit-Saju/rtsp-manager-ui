@@ -7,6 +7,7 @@ export interface Stream {
   filePath: string;
   resolution?: '1280x720' | '1920x1080' | '3840x2160';
   status?: boolean;
+  snapshotPath?: string;
 }
 
 export interface Streams {

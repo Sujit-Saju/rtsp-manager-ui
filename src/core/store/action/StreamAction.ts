@@ -82,11 +82,11 @@ export const deleteStreamAction = createAsyncThunk(
 
 export const listStreamAction = createAsyncThunk(
   "list/stream",
-  async (pageParams: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     const { listStreams } = streamService();
 
     try {
-      const { data } = await listStreams(pageParams);
+      const { data } = await listStreams();
       return data;
     } catch (error: any) {
       return rejectWithValue(
