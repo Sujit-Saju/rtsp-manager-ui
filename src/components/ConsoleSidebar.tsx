@@ -9,7 +9,7 @@ import { ConsoleLog } from '../types';
 import { Terminal, Shield, RefreshCw, Layers } from 'lucide-react';
 
 interface ConsoleSidebarProps {
-  logs: ConsoleLog[];
+  logs: any[];
   onClearLogs?: () => void;
 }
 
@@ -358,7 +358,7 @@ export default function ConsoleSidebar({ logs, onClearLogs }: ConsoleSidebarProp
                 <Box key={log.id} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.8, lineHeight: 1.4 }}>
                   <span style={{ color: '#475569', flexShrink: 0 }}>{log.timestamp}</span>
                   <span style={{ color: tagColor, fontWeight: 700, flexShrink: 0 }}>
-                    [{log.level.toUpperCase()}]
+                    {/* [{log.level.toUpperCase()}] */}
                   </span>
                   <span style={{ color: msgColor, wordBreak: 'break-all' }}>
                     {log.message}

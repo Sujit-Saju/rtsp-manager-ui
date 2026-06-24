@@ -8,8 +8,12 @@ export const streamService = () => {
     },
   };
 
-  const addStreams = (data: any) => {
-    return PostAPI(urlConstants.stream + "/add", data, config);
+  const addStreams = (data: FormData) => {
+    return PostAPI(urlConstants.stream + "/add", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   };
   const getStreams = (id: any) => {
     return GetAPI(urlConstants.stream + "/by_uniq_code" + id, config);
@@ -21,7 +25,7 @@ export const streamService = () => {
     return DeleteAPI(urlConstants.stream + `/delete?uniq_code=${id}`, config);
   };
   const listStreams = () => {
-    return GetAPI(urlConstants.stream + "/list"  ,config);
+    return GetAPI(urlConstants.stream + "/list", config);
   };
 
   const uploadVideos = (data: any) => {

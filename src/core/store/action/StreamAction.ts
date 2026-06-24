@@ -28,7 +28,7 @@ export const getStreamAction = createAsyncThunk(
 
 export const addStreamAction = createAsyncThunk(
   "add/stream",
-  async (data1: any, { rejectWithValue }) => {
+  async (data1: FormData, { rejectWithValue }) => {
     const { addStreams } = streamService();
 
     try {
