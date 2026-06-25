@@ -5,7 +5,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import rtspLogo from '@/assets/logo/rtsp_logo.jpeg';
 import { useAppDispatch, useAppSelector } from '@/src/core/store/Hooks';
 import AddStreamModal from './AddStreamModal';
-import { listStreamAction } from '@/src/core/store/action/StreamAction';
+import { deleteStreamAction, listStreamAction } from '@/src/core/store/action/StreamAction';
+import { Stream } from '@/src/core/store/InitialStates/Stream';
 
 const MainPage = () => {
 
@@ -17,6 +18,25 @@ const MainPage = () => {
     // Fix 1: searchTerm as local state, not pointing to stream.data
     const [searchTerm, setSearchTerm] = useState('');
     const [addStream, setAddStream] = useState(false);
+    const [playVideo, setPlayVideo] = useState(false);
+
+    const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
+
+    // Play the video
+    const handlePlayVideo = (uniqCode: string) => {
+        const stream = streams?.find(item => item.uniqCode === uniqCode);
+
+        if (stream) {
+            setSelectedStream(stream);
+            setPlayVideo(true);
+        }
+    };
+
+    // Delete the stream
+    const handleDeleteStream = (uniqCode: string) => {
+        // Implement the delete logic here
+        dispatch(deleteStreamAction(uniqCode));
+    };
 
     const logs: any[] = [];
     const previewStream = null;
@@ -283,10 +303,16 @@ const MainPage = () => {
                                                 </Box>
 
                                                 <Box sx={{ display: 'flex', gap: 1.5, borderTop: '1px solid rgba(255, 255, 255, 0.06)', pt: 1.5 }}>
-                                                    <Button variant="contained" fullWidth startIcon={<ExternalLink size={12} />} sx={{ py: 0.8, fontSize: '11px' }}>
-                                                        Live Telemetry
+                                                    <Button
+                                                        variant="contained"
+                                                        fullWidth
+                                                        startIcon={<ExternalLink size={12} />}
+                                                        sx={{ py: 0.8, fontSize: '11px' }}
+                                                        onClick={() => handlePlayVideo(stream.uniqCode)}
+                                                    >
+                                                        Play Video
                                                     </Button>
-                                                    <Button variant="outlined" color="error" sx={{ minWidth: '40px', width: '40px', borderRadius: '12px', borderColor: 'rgba(239, 68, 68, 0.25)', p: 0 }}>
+                                                    <Button variant="outlined" color="error" sx={{ minWidth: '40px', width: '40px', borderRadius: '12px', borderColor: 'rgba(239, 68, 68, 0.25)', p: 0 }} onClick={() => handleDeleteStream(stream.uniqCode)}>
                                                         <Trash2 size={13} />
                                                     </Button>
                                                 </Box>
@@ -307,6 +333,31 @@ const MainPage = () => {
 
             <Dialog open={addStream} onClose={handleCloseAddStreamForm}>
                 <AddStreamModal onClose={handleCloseAddStreamForm} />
+            </Dialog>
+            <Dialog
+                open={playVideo}
+                onClose={() => {
+                    setPlayVideo(false);
+                    setSelectedStream(null);
+                }}
+                maxWidth="md"
+                fullWidth
+            >
+                <Box sx={{ bgcolor: 'black' }}>
+                    {selectedStream && (
+                        <video
+                            key={selectedStream.uniqCode}
+                            src={`${API_BASE_URL}/${selectedStream.filePath}`}
+                            controls
+                            autoPlay
+                            style={{
+                                width: '100%',
+                                maxHeight: '500px',
+                                display: 'block',
+                            }}
+                        />
+                    )}
+                </Box>
             </Dialog>
         </>
     )
