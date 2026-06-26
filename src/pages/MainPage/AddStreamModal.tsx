@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import rtspLogo from '@/assets/logo/rtsp_logo.jpeg';
+import rtspLogo from '@/assets/logo/rtsp_logo.png';
 import { useAppDispatch } from '../../core/store/Hooks';
 import { addStreamAction, uploadVideosAction } from '../../core/store/action/StreamAction';
 import VideoUploader from '../helpers/VideoUploader';

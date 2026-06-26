@@ -3,92 +3,77 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useMemo, useEffect, useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {
-  Box,
-  Typography,
-  AppBar,
-  Toolbar,
-  Button,
-  IconButton,
-  Container,
-  Card,
-  CardMedia,
-  CardContent,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Checkbox,
-  FormControlLabel,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  TextField,
-  Chip,
-  Badge,
-  Avatar,
-  Paper,
-  Stack,
-  Snackbar,
-  Alert,
-  CssBaseline
-} from '@mui/material';
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, Box } from "@mui/material";
 
-import { RTSPStream } from './types';
-import BackgroundShader from './components/BackgroundShader';
-import StreamPlayer from './components/StreamPlayer';
-import ConsoleSidebar from './components/ConsoleSidebar';
-import rtspLogo from '@/assets/logo/rtsp_logo.jpeg';
-
-import { useAppDispatch, useAppSelector } from './core/store/Hooks';
-// import {
-//   setSearchTerm,
-//   setFilterType,
-//   setToastMessage,
-//   setIsCreateOpen,
-//   setPreviewStream,
-//   updateNewStreamField,
-//   addLog,
-//   addStream,
-//   deleteStream,
-//   clearLogs
-// } from './store/streamsSlice';
-
-import {
-  Video,
-  CheckCircle,
-  Users,
-  Network,
-  Plus,
-  Copy,
-  Trash2,
-  Bell,
-  Search,
-  ExternalLink,
-  Activity
-} from 'lucide-react';
-import MainPage from './pages/MainPage';
-import { getMuiTheme } from './theme';
-
+import theme from "./theme";
+import MainPage from "./pages/MainPage";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
-  const dispatch = useAppDispatch();
-
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const theme = useMemo(() => getMuiTheme(isDarkMode), [isDarkMode]);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* <BackgroundShader /> */}
-      <MainPage isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+
+      <Box
+        sx={{
+          minHeight: "100vh",
+          position: "relative",
+          overflow: "hidden",
+
+          background: `
+            radial-gradient(circle at top,
+              rgba(24,183,255,.10),
+              transparent 35%),
+            linear-gradient(
+              180deg,
+              #111317 0%,
+              #0F1013 100%
+            )
+          `,
+        }}
+      >
+        {/* Top glow */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: -180,
+            right: -120,
+            width: 450,
+            height: 450,
+            borderRadius: "50%",
+            background: "rgba(24,183,255,.12)",
+            filter: "blur(140px)",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Bottom glow */}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: -120,
+            left: -80,
+            width: 300,
+            height: 300,
+            borderRadius: "50%",
+            background: "rgba(24,183,255,.08)",
+            filter: "blur(100px)",
+            pointerEvents: "none",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1,
+            minHeight: "100vh",
+          }}
+        >
+          <MainPage />
+          <Toaster position="top-center" reverseOrder={false} />
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 }
