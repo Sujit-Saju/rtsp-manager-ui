@@ -187,6 +187,7 @@ const MainPage = () => {
                             src={`${API_BASE_URL}/${selectedStream.filePath}`}
                             controls
                             autoPlay
+                            crossOrigin="anonymous"
                             style={{ width: '100%', maxHeight: '500px', display: 'block' }}
                         />
                     )}
