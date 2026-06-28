@@ -1,91 +1,116 @@
-# RTSP Stream Gateway
+# RTSP Manager — UI
 
-An intelligent high-performance surveillance and RTSP stream orchestration dashboard. Designed as a sleek, premium, high-telemetry interface for real-time video surveillance networks, active camera pipeline provisioning, and edge hardware monitoring.
+The frontend for RTSP Manager. A dark-themed dashboard for provisioning and managing RTSP video streams. Upload a video, set the stream parameters, and get a live RTSP URL you can paste directly into VLC, OpenCV, or any RTSP player.
 
----
-
-## 🚀 Key Features
-
-- **Live Stream Orchestration & Ingestion Dashboard**:
-  - Deep obsidian dark interface with real-time analytics panel.
-  - Tracking indicators for active encoders, connected sinks, client listeners, and core packet stream precision.
-- **WebGL Background Shader**:
-  - A responsive background rendering a moving scanline grid with fluid indigo and cyan space aura glow animations (runs on GPU via WebGL).
-- **RTSP Node Provisioning Workflow**:
-  - Form dialog allowing operator registration of new camera source addresses.
-  - Interactive configuration options: resolution ceilings (FHD, HD, 4K), compression codecs (H.264, H.265 HEVC), target framerates (15, 30, 60 FPS), loop buffering, and security paths (Intranet P2P, WAN Optimized Relay, Perimeter Secured Air-Gap).
-- **Real-Time System Audit Console**:
-  - Stream logs auditing stream status changes, pipeline calibration, and client socket updates.
-  - Gateway resource load monitoring widgets tracking live simulated CPU, Memory, and GPU loads via custom SVG ring graphs.
-  - Micro-animated network traffic pulse graphics.
+> **Requires the [rtsp-manager-server](https://github.com/sujit-saju/rtsp-manager-server) to be running.**
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Features
 
-- **Framework**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Bundler**: [Vite](https://vite.dev/) (Pre-configured for fast hot module replacement and build-time assets compilation)
-- **Styling**: [Material UI (MUI 9)](https://mui.com/) + [TailwindCSS v4](https://tailwindcss.com/)
-- **State Management**: [Redux Toolkit](https://redux-toolkit.js.org/) (Handles dashboard filtering, searching, modal toggles, system logs, and stream configurations)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Shader Graphics**: WebGL Context Canvas (`BackgroundShader.tsx`)
+- Provision new RTSP stream nodes with name, resolution (720p → 4K), and frame rate
+- View all active streams with snapshot thumbnails and live/offline status
+- Copy the RTSP URL to clipboard in one click
+- Play back the uploaded source video directly in the browser
+- Delete streams (also removes the file from the server)
+- Real-time search and filter across all streams
+- Stats overview — total streams, active clients, uptime
 
 ---
 
-## 📂 Project Structure
+## Tech Stack
 
-```text
-├── assets/                  # Public assets and static files
-│   ├── logo/                # Custom logo assets
-│   │   └── rtsp_logo.jpeg   # App logo image
-│   └── .aistudio/           # AI Studio / Project IDX metadata configs
-├── src/
-│   ├── components/
-│   │   ├── BackgroundShader.tsx  # WebGL grid & neon aura generator
-│   │   ├── ConsoleSidebar.tsx    # Live telemetry widgets & system audit log
-│   │   └── StreamPlayer.tsx      # Canvas-based camera simulator & CV bracket drawer
-│   ├── store/
-│   │   ├── index.ts              # Redux Store configurator & selector typed bindings
-│   │   └── streamsSlice.ts       # Main state manager (streams, tab filtering, dialog controllers)
-│   ├── App.tsx              # Main dashboard wrapper & layout organizer
-│   ├── types.ts             # Shared interfaces (RTSPStream, ConsoleLog, etc.)
-│   ├── index.css            # Base stylesheet entry
-│   └── main.tsx             # Application bootstrapper
-├── index.html               # Main entry HTML document
-├── vite.config.ts           # Vite + Tailwind + React integration configuration
-├── tsconfig.json            # TypeScript configuration
-├── package.json             # App dependencies, engines, and run scripts
-└── .env.example             # Template for local environment variables
+- **React 19** + **TypeScript**
+- **Vite 6** — build tooling and dev server
+- **MUI v9** — UI components and dark theme
+- **Tailwind CSS v4** — utility styling
+- **Redux Toolkit** — global state management
+- **Formik + Yup** — form handling and validation
+- **Axios** — API communication with interceptors
+- **Lucide React** — icons
+- **React Hot Toast** — notifications
+
+---
+
+## Project Structure
+
+```
+src/
+├── pages/
+│   └── MainPage/
+│       ├── index.tsx           # Main dashboard layout
+│       └── AddStreamModal.tsx  # Provision stream form
+├── components/
+│   ├── StreamPlayer.tsx        # Canvas-based stream viewer
+│   ├── dashboards/
+│   │   ├── StreamCard.tsx      # Individual stream card
+│   │   ├── StatsCard.tsx       # Summary stats row
+│   │   └── SearchToolBar.tsx   # Search and filter bar
+│   └── layout/
+│       └── AppHeader.tsx       # Top navigation bar
+├── core/
+│   ├── store/                  # Redux store, slices, async thunks
+│   ├── service/                # API service layer
+│   └── api/                    # Axios instance + interceptors
+└── theme.ts                    # MUI dark theme config
 ```
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
-### 1. Prerequisites
-Ensure you have [Node.js](https://nodejs.org/) installed (version 18+ recommended).
+### Prerequisites
 
-### 2. Install Dependencies
-Run the following command in the project directory to install all dependencies:
+- Node.js 18+
+- The [rtsp-manager-server](https://github.com/sujit-saju/rtsp-manager-server) running locally
+
+### Setup
+
 ```bash
+# Clone the repo
+git clone https://github.com/sujit-saju/rtsp-manager-ui.git
+cd rtsp-manager-ui
+
+# Install dependencies
 npm install
-```
 
-### 3. Run Development Server
-Start the local Vite development server:
-```bash
+# Configure environment
+cp .env.example .env
+# Set VITE_APP_API_URL to your backend URL
+
+# Start the dev server
 npm run dev
 ```
-The application will launch by default on [http://localhost:3000](http://localhost:3000) (listening on all interfaces: `0.0.0.0`).
 
-### 4. Build for Production
-To generate an optimized production bundle in the `dist` folder:
+The app will be available at `http://localhost:3000`.
+
+### Build for Production
+
 ```bash
 npm run build
+npm run preview
 ```
 
-### 5. Type Checking / Linting
-Validate the codebase against the TypeScript compile rules:
-```bash
-npm run lint
-```
+---
+
+## Environment Variables
+
+| Variable | Description | Example |
+|---|---|---|
+| `VITE_APP_API_URL` | Base URL of the backend API | `http://192.168.0.234:5000` |
+
+---
+
+## Usage
+
+1. Open the dashboard at `http://localhost:3000`
+2. Click **Provision Stream Node**
+3. Enter a stream name, upload a video file, choose resolution and FPS
+4. Click **Provision Node** — the RTSP URL appears on the stream card within seconds
+5. Copy the URL and use it in VLC, OpenCV, GStreamer, or any RTSP client
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
